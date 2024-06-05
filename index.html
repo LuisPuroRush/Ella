@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Página de Ingreso</title>
+<link rel="icon" href="Corazon.ico">
+<title>Para ella :3 ❤️</title>
 <style>
     body {
         margin: 0;
@@ -106,7 +107,7 @@
 
     @keyframes fadeBlink {
         0%, 100% { opacity: 1; }
-        50% { opacity: 0.5; }
+        50% { opacity: 0.3; }
     }
 
     @keyframes bounceIn {
@@ -157,15 +158,21 @@
         }
     }
 
+    @keyframes fireflies {
+        0%, 100% { opacity: 0.8; }
+        50% { opacity: 1; }
+    }
+
     #overlay {
         position: fixed;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
+        background-color: rgba(0, 0, 0, 0.8);
         z-index: 0;
         display: none;
+        animation: fadeBlink 3s infinite;
     }
 
     .hidden {
@@ -186,8 +193,8 @@
 
     #image2 {
         position: absolute;
-        left: 50%;
-        top: 50%;
+        left: 10%;
+        top: 40%;
         width: 300px;
         height: auto;
         display: none;
@@ -195,12 +202,37 @@
         transform: translate(-50%, -50%);
         animation: rotateIn 2s ease forwards;
     }
+
+    #image3 {
+        position: absolute;
+        left: 10%;
+        top: 40%;
+        width: 300px;
+        height: auto;
+        display: none;
+        z-index: 2;
+        transform: translate(-50%, -50%);
+        animation: fadeIn 2s ease forwards;
+    }
+
+    #image4 {
+        position: absolute;
+        left: 10%;
+        top: 40%;
+        width: 300px;
+        height: auto;
+        display: none;
+        z-index: 2;
+        transform: translate(-50%, -50%);
+        animation: bounceIn 2s ease forwards;
+    }
 </style>
 </head>
 <body>
 
 <video autoplay loop muted id="background-video">
   <source src="fondo.mp4" type="video/mp4">
+  Your browser does not support the video tag.
 </video>
 
 <audio id="background-music">
@@ -212,14 +244,14 @@
 
 <div id="content-container">
     <div id="question-container" class="hidden">
-        <p>¿Cuál era nuestra fecha jasxjsxj :3 ?</p>
+        <p>¿Cuál es la fecha de hoy?</p>
         <input type="number" id="fecha">
         <button id="submit-btn" class="btn">Enviar</button>
         <p id="error-message" class="error"></p>
     </div>
 
     <div id="designer-container" class="hidden">
-        <p>¿Quién crees que diseño esto :3 ?</p>
+        <p>¿Quién diseñó esta web?</p>
         <button class="designer-option" data-designer="luis">Luis</button>
         <button class="designer-option" data-designer="fernando">Fernando</button>
         <button class="designer-option" data-designer="marcelino">Marcelino</button>
@@ -230,6 +262,8 @@
 <div id="overlay"></div>
 <img src="Ella.jpg" id="image1" alt="Imagen 1">
 <img src="Ella2.png" id="image2" alt="Imagen 2">
+<img src="Ella.jpg" id="image3" alt="Imagen 3">
+<img src="Ella2.png" id="image4" alt="Imagen 4">
 
 <script>
     const ingresarBtn = document.getElementById("ingresar-btn");
@@ -242,6 +276,8 @@
     const overlay = document.getElementById("overlay");
     const image1 = document.getElementById("image1");
     const image2 = document.getElementById("image2");
+    const image3 = document.getElementById("image3");
+    const image4 = document.getElementById("image4");
 
     ingresarBtn.addEventListener("click", function() {
         ingresarBtn.style.display = "none";
@@ -274,7 +310,7 @@
                 backgroundMusic.play();
                 
                 overlay.style.display = "block";
-                overlay.style.animation = "fadeBlink 3s infinite";
+                overlay.style.animation = "fadeBlink 1.5s infinite";
 
                 setTimeout(function() {
                     overlay.style.animation = "";
@@ -290,6 +326,24 @@
                     image1.style.display = "none";
                     image2.style.display = "block";
                 }, 28000); // 28 segundos
+
+                setTimeout(function() {
+                    image2.style.animation = "fadeOut 2s ease forwards";
+                }, 36000); // 36 segundos
+
+                setTimeout(function() {
+                    image2.style.display = "none";
+                    image3.style.display = "block";
+                }, 38000); // 38 segundos
+
+                setTimeout(function() {
+                    image3.style.animation = "fadeOut 2s ease forwards";
+                }, 46000); // 46 segundos
+
+                setTimeout(function() {
+                    image3.style.display = "none";
+                    image4.style.display = "block";
+                }, 48000); // 48 segundos
             } else {
                 designerErrorMessage.textContent = "Respuesta incorrecta, no puedes ingresar.";
             }
