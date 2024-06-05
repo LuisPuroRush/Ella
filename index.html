@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Página de Ingreso</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Arial', sans-serif;
+        background-color: black;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    #background-video {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 100vw;
+        height: 100vh;
+        object-fit: cover;
+        transform: translate(-50%, -50%);
+        z-index: -1;
+    }
+
+    #content-container {
+        position: absolute;
+        text-align: center;
+        background-color: rgba(0, 0, 0, 0.8);
+        padding: 20px;
+        border-radius: 10px;
+        color: white;
+        opacity: 0;
+        transform: scale(0.8);
+        transition: opacity 0.5s ease, transform 0.5s ease;
+        z-index: 1;
+        display: none;
+    }
+
+    #content-container.fade-in {
+        opacity: 1;
+        transform: scale(1);
+        display: block;
+    }
+
+    .btn {
+        background-color: transparent;
+        border: 2px solid white;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        font-size: 16px;
+        margin: 20px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .btn:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        transform: scale(1.1);
+    }
+
+    .designer-option {
+        background-color: transparent;
+        border: 2px solid white;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 5px;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+
+    .designer-option:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        transform: scale(1.1);
+    }
+
+    input {
+        padding: 10px;
+        margin: 5px;
+        border-radius: 5px;
+        border: 2px solid white;
+        background-color: transparent;
+        color: white;
+        width: 80%;
+        font-size: 16px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .error {
+        color: red;
+        margin-top: 10px;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    @keyframes fadeBlink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+
+    @keyframes bounceIn {
+        0% {
+            transform: translateY(-100px);
+            opacity: 0;
+        }
+        60% {
+            transform: translateY(10px);
+            opacity: 1;
+        }
+        80% {
+            transform: translateY(-5px);
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes fadeOut {
+        0% {
+            opacity: 1;
+        }
+        100% {
+            opacity: 0;
+        }
+    }
+
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes rotateIn {
+        0% {
+            transform: rotate(-360deg);
+            opacity: 0;
+        }
+        100% {
+            transform: rotate(0deg);
+            opacity: 1;
+        }
+    }
+
+    #overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 0;
+        display: none;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    #image1 {
+        position: absolute;
+        left: 10%;
+        top: 40%;
+        width: 300px;
+        height: auto;
+        display: none;
+        z-index: 2;
+        transform: translate(-50%, -50%);
+        animation: bounceIn 2s ease forwards;
+    }
+
+    #image2 {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 300px;
+        height: auto;
+        display: none;
+        z-index: 2;
+        transform: translate(-50%, -50%);
+        animation: rotateIn 2s ease forwards;
+    }
+</style>
+</head>
+<body>
+
+<video autoplay loop muted id="background-video">
+  <source src="fondo.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
+
+<audio id="background-music">
+  <source src="musica.mp3" type="audio/mp3">
+  Your browser does not support the audio tag.
+</audio>
+
+<button id="ingresar-btn" class="btn">Ingresar</button>
+
+<div id="content-container">
+    <div id="question-container" class="hidden">
+        <p>¿Cuál es la fecha de hoy?</p>
+        <input type="number" id="fecha">
+        <button id="submit-btn" class="btn">Enviar</button>
+        <p id="error-message" class="error"></p>
+    </div>
+
+    <div id="designer-container" class="hidden">
+        <p>¿Quién diseñó esta web?</p>
+        <button class="designer-option" data-designer="luis">Luis</button>
+        <button class="designer-option" data-designer="fernando">Fernando</button>
+        <button class="designer-option" data-designer="marcelino">Marcelino</button>
+        <p id="designer-error-message" class="error"></p>
+    </div>
+</div>
+
+<div id="overlay"></div>
+<img src="Ella.jpg" id="image1" alt="Imagen 1">
+<img src="Ella2.png" id="image2" alt="Imagen 2">
+
+<script>
+    const ingresarBtn = document.getElementById("ingresar-btn");
+    const contentContainer = document.getElementById("content-container");
+    const questionContainer = document.getElementById("question-container");
+    const designerContainer = document.getElementById("designer-container");
+    const errorMessage = document.getElementById("error-message");
+    const designerErrorMessage = document.getElementById("designer-error-message");
+    const backgroundMusic = document.getElementById("background-music");
+    const overlay = document.getElementById("overlay");
+    const image1 = document.getElementById("image1");
+    const image2 = document.getElementById("image2");
+
+    ingresarBtn.addEventListener("click", function() {
+        ingresarBtn.style.display = "none";
+        contentContainer.classList.add("fade-in");
+        questionContainer.classList.remove("hidden");
+    });
+
+    document.getElementById("submit-btn").addEventListener("click", function() {
+        const fecha = document.getElementById("fecha").value;
+
+        if (fecha === "06") {
+            errorMessage.textContent = "";
+            questionContainer.classList.add("hidden");
+            designerContainer.classList.remove("hidden");
+        } else {
+            errorMessage.textContent = "La fecha ingresada no es correcta.";
+        }
+    });
+
+    document.querySelectorAll(".designer-option").forEach(button => {
+        button.addEventListener("click", function() {
+            const designer = this.getAttribute("data-designer");
+
+            if (designer === "luis") {
+                designerErrorMessage.textContent = "";
+                designerContainer.classList.add("hidden");
+                contentContainer.style.display = "none";
+                document.getElementById("background-video").style.zIndex = 0;
+                document.getElementById("background-video").play();
+                backgroundMusic.play();
+                
+                overlay.style.display = "block";
+                overlay.style.animation = "fadeBlink 3s infinite";
+
+                setTimeout(function() {
+                    overlay.style.animation = "";
+                    overlay.style.display = "none";
+                    image1.style.display = "block";
+                }, 18000); // 18 segundos
+
+                setTimeout(function() {
+                    image1.style.animation = "fadeOut 2s ease forwards";
+                }, 26000); // 26 segundos
+
+                setTimeout(function() {
+                    image1.style.display = "none";
+                    image2.style.display = "block";
+                }, 28000); // 28 segundos
+            } else {
+                designerErrorMessage.textContent = "Respuesta incorrecta, no puedes ingresar.";
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
