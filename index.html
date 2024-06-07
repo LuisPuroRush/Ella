@@ -113,11 +113,6 @@
         100% { background-color: rgba(0, 0, 0, 1); }
     }
 
-    @keyframes lineMoveUp {
-        0% { transform: translateY(100%); }
-        100% { transform: translateY(-100%); }
-    }
-
     #overlay {
         position: fixed;
         top: 0;
@@ -147,7 +142,7 @@
     #image4 { animation: bounceIn 2s ease forwards; }
     #image5 { animation: fadeIn 2s ease forwards; }
 
-    #lyrics {
+    .lyrics-container {
         position: absolute;
         top: 30%;
         right: 5%;
@@ -155,21 +150,28 @@
         font-size: 18px;
         font-family: 'Courgette', cursive;
         text-align: left;
-        line-height: 1.5;
-        display: none;
         overflow: hidden;
-        height: 200px;
+        height: 120px; /* Height for three lines */
+        display: none;
+    }
+
+    .lyrics {
+        position: absolute;
+        top: 0;
+        display: flex;
+        flex-direction: column;
+        transition: top 1s ease-in-out;
     }
 
     .line {
-        opacity: 0;
-        transition: opacity 1s ease;
+        font-size: 20px;
+        margin: 10px 0;
+        height: 30px; /* Fixed height for each line to avoid cutting off */
+        color: rgba(255, 255, 255, 0.5);
     }
 
-    .visible {
-        opacity: 1;
-        color: white;
-        animation: lineMoveUp 1s ease forwards;
+    .active {
+        color: #fff;
     }
 </style>
 </head>
@@ -211,33 +213,26 @@
 <img src="Ella2.png" id="image4" class="image" alt="Imagen 4">
 <img src="Ella.jpg" id="image5" class="image" alt="Imagen 5">
 
-<div id="lyrics">
-  <p class="line">Amar puede doler, amar a veces puede doler</p>
-  <p class="line">Pero es lo único que sé</p>
-  <p class="line">Cuando se pone difícil, sabes que a veces puede volverse difícil</p>
-  <p class="line">Y la razón por la que despierto cada mañana</p>
-
-  <br>
-
-  <p class="line">Es porque puedo ver tu cara en una fotografía</p>
-  <p class="line">Es porque puedo recordar cómo me haces sentir</p>
-  <p class="line">Cada risa, cada susurro</p>
-  <p class="line">Es la música que le da ritmo a mi vida</p>
-
-  <br>
-
-  <p class="line">Si pudieras escuchar con mis oídos</p>
-  <p class="line">Sentirías el amor incondicional</p>
-  <p class="line">Que crece y crece sin medida</p>
-  <p class="line">Con cada mirada</p>
-  <p class="line">Y cada gesto que compartimos juntos</p>
-
-  <br>
-
-  <p class="line">Es porque puedo ver tu cara en una fotografía</p>
-  <p class="line">Es porque puedo recordar cómo me haces sentir</p>
-  <p class="line">Y puedo mantener este momento para siempre en mi mente</p>
-  <p class="line">Y nunca tendré que dejarte ir</p>
+<div class="lyrics-container" id="lyrics-container">
+    <div class="lyrics" id="lyrics">
+        <div class="line inactive">Amar puede doler, amar a veces puede doler</div>
+        <div class="line active">Pero es lo único que sé</div>
+        <div class="line inactive">Cuando se pone difícil, sabes que a veces puede volverse difícil</div>
+        <div class="line inactive">Y la razón por la que despierto cada mañana</div>
+        <div class="line inactive">Es porque puedo ver tu cara en una fotografía</div>
+        <div class="line inactive">Es porque puedo recordar cómo me haces sentir</div>
+        <div class="line inactive">Cada risa, cada susurro</div>
+        <div class="line inactive">Es la música que le da ritmo a mi vida</div>
+        <div class="line inactive">Si pudieras escuchar con mis oídos</div>
+        <div class="line inactive">Sentirías el amor incondicional</div>
+        <div class="line inactive">Que crece y crece sin medida</div>
+        <div class="line inactive">Con cada mirada</div>
+        <div class="line inactive">Y cada gesto que compartimos juntos</div>
+        <div class="line inactive">Es porque puedo ver tu cara en una fotografía</div>
+        <div class="line inactive">Es porque puedo recordar cómo me haces sentir</div>
+        <div class="line inactive">Y puedo mantener este momento para siempre en mi mente</div>
+        <div class="line inactive">Y nunca tendré que dejarte ir</div>
+    </div>
 </div>
 
 <script>
@@ -250,6 +245,7 @@
     const backgroundMusic = document.getElementById("background-music");
     const overlay = document.getElementById("overlay");
     const images = document.querySelectorAll(".image");
+    const lyricsContainer = document.getElementById("lyrics-container");
     const lyrics = document.getElementById("lyrics");
     const backgroundVideo = document.getElementById("background-video");
 
@@ -291,7 +287,7 @@
                     setTimeout(function() {
                         overlay.style.backgroundColor = "rgba(0, 0, 0, 1)";
                         images[0].style.display = "block";
-                        lyrics.style.display = "block";
+                        lyricsContainer.style.display = "block";
                         showLyrics();
                     }, 1000);
                 }, 16000);
@@ -319,17 +315,18 @@
     function showLyrics() {
         const lines = document.querySelectorAll(".line");
         let currentIndex = 0;
+        const lineHeight = 40; // Adjust based on font size and spacing
 
         function displayNextLine() {
             if (currentIndex > 2) {
-                lines[currentIndex - 3].classList.remove("visible");
+                lines[currentIndex - 3].classList.remove("active");
             }
 
-            lines[currentIndex].classList.add("visible");
-            currentIndex++;
-
             if (currentIndex < lines.length) {
-                setTimeout(displayNextLine, 5000); // Ajusta el tiempo según la duración de cada línea
+                lines[currentIndex].classList.add("active");
+                lyrics.style.top = `-${currentIndex * lineHeight}px`;
+                currentIndex++;
+                setTimeout(displayNextLine, 5000); // Adjust timing as needed
             }
         }
 
