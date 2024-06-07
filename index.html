@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" href="Corazon.ico">
 <title>Para ella :3 ❤️</title>
 <style>
+    @import url('https://fonts.googleapis.com/css2?family=Courgette&display=swap');
+    
     body {
         margin: 0;
         padding: 0;
@@ -16,6 +18,7 @@
         justify-content: center;
         align-items: center;
         height: 100vh;
+        color: white;
     }
 
     #background-video {
@@ -27,6 +30,7 @@
         object-fit: cover;
         transform: translate(-50%, -50%);
         z-index: -1;
+        animation: fadeBlinkAndDarken 16s ease-in-out;
     }
 
     #content-container {
@@ -35,18 +39,14 @@
         background-color: rgba(0, 0, 0, 0.8);
         padding: 20px;
         border-radius: 10px;
-        color: white;
         opacity: 0;
         transform: scale(0.8);
         transition: opacity 0.5s ease, transform 0.5s ease;
-        z-index: 1;
-        display: none;
     }
 
     #content-container.fade-in {
         opacity: 1;
         transform: scale(1);
-        display: block;
     }
 
     .btn {
@@ -60,7 +60,6 @@
         cursor: pointer;
         border-radius: 5px;
         transition: all 0.3s ease;
-        font-family: 'Arial', sans-serif;
     }
 
     .btn:hover {
@@ -93,7 +92,6 @@
         color: white;
         width: 80%;
         font-size: 16px;
-        font-family: 'Arial', sans-serif;
     }
 
     .error {
@@ -105,9 +103,14 @@
         display: none;
     }
 
-    @keyframes fadeBlink {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.3; }
+    @keyframes fadeBlinkAndDarken {
+        0%, 100% { opacity: 1; background-color: rgba(0, 0, 0, 0); }
+        50% { opacity: 0.3; background-color: rgba(0, 0, 0, 0.5); }
+    }
+
+    @keyframes darkenToBlack {
+        0% { background-color: rgba(0, 0, 0, 0.8); }
+        100% { background-color: rgba(0, 0, 0, 1); }
     }
 
     @keyframes bounceIn {
@@ -130,37 +133,35 @@
     }
 
     @keyframes fadeOut {
-        0% {
-            opacity: 1;
-        }
-        100% {
-            opacity: 0;
-        }
+        0% { opacity: 1; }
+        100% { opacity: 0; }
     }
 
     @keyframes fadeIn {
-        0% {
-            opacity: 0;
-        }
-        100% {
-            opacity: 1;
-        }
+        0% { opacity: 0; }
+        100% { opacity: 1; }
     }
 
     @keyframes rotateIn {
-        0% {
-            transform: rotate(-360deg);
-            opacity: 0;
-        }
-        100% {
-            transform: rotate(0deg);
-            opacity: 1;
-        }
+        0% { transform: rotate(-360deg); opacity: 0; }
+        100% { transform: rotate(0deg); opacity: 1; }
     }
 
-    @keyframes fireflies {
-        0%, 100% { opacity: 0.8; }
-        50% { opacity: 1; }
+    @keyframes scrollLyrics {
+        0% { opacity: 0; transform: translateY(100%); }
+        10% { opacity: 1; }
+        90% { opacity: 1; transform: translateY(-100%); }
+        100% { opacity: 0; }
+    }
+
+    @keyframes lineFadeIn {
+        0% { opacity: 0; transform: translateY(10px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes lineFadeOut {
+        0% { opacity: 1; transform: translateY(0); }
+        100% { opacity: 0; transform: translateY(-10px); }
     }
 
     #overlay {
@@ -172,59 +173,40 @@
         background-color: rgba(0, 0, 0, 0.8);
         z-index: 0;
         display: none;
-        animation: fadeBlink 3s infinite;
+        animation: darkenToBlack 1s forwards;
     }
 
-    .hidden {
-        display: none;
-    }
-
-    #image1 {
+    .image {
         position: absolute;
         left: 10%;
-        top: 40%;
+        top: 50%;
         width: 300px;
         height: auto;
         display: none;
         z-index: 2;
-        transform: translate(-50%, -50%);
-        animation: bounceIn 2s ease forwards;
+        transform: translateY(-50%);
     }
 
-    #image2 {
+    #image1 { animation: bounceIn 2s ease forwards; }
+    #image2 { animation: rotateIn 2s ease forwards; }
+    #image3 { animation: fadeIn 2s ease forwards; }
+    #image4 { animation: bounceIn 2s ease forwards; }
+    #image5 { animation: fadeIn 2s ease forwards; }
+
+    #lyrics {
         position: absolute;
-        left: 10%;
-        top: 40%;
-        width: 300px;
-        height: auto;
+        top: 20%;
+        right: 5%;
+        width: 45%;
+        font-size: 18px;
+        font-family: 'Courgette', cursive;
+        text-align: left;
+        line-height: 1.5;
         display: none;
-        z-index: 2;
-        transform: translate(-50%, -50%);
-        animation: rotateIn 2s ease forwards;
     }
 
-    #image3 {
-        position: absolute;
-        left: 10%;
-        top: 40%;
-        width: 300px;
-        height: auto;
-        display: none;
-        z-index: 2;
-        transform: translate(-50%, -50%);
-        animation: fadeIn 2s ease forwards;
-    }
-
-    #image4 {
-        position: absolute;
-        left: 10%;
-        top: 40%;
-        width: 300px;
-        height: auto;
-        display: none;
-        z-index: 2;
-        transform: translate(-50%, -50%);
-        animation: bounceIn 2s ease forwards;
+    .line {
+        opacity: 0;
     }
 </style>
 </head>
@@ -244,8 +226,8 @@
 
 <div id="content-container">
     <div id="question-container" class="hidden">
-        <p>¿Cuál es la fecha de hoy?</p>
-        <input type="number" id="fecha">
+        <p>¿Cuál es nuestra fecha juntos?</p>
+        <input type="text" id="fecha">
         <button id="submit-btn" class="btn">Enviar</button>
         <p id="error-message" class="error"></p>
     </div>
@@ -260,10 +242,29 @@
 </div>
 
 <div id="overlay"></div>
-<img src="Ella.jpg" id="image1" alt="Imagen 1">
-<img src="Ella2.png" id="image2" alt="Imagen 2">
-<img src="Ella.jpg" id="image3" alt="Imagen 3">
-<img src="Ella2.png" id="image4" alt="Imagen 4">
+<img src="Ella.jpg" id="image1" class="image" alt="Imagen 1">
+<img src="Ella2.png" id="image2" class="image" alt="Imagen 2">
+<img src="Ella.jpg" id="image3" class="image" alt="Imagen 3">
+<img src="Ella2.png" id="image4" class="image" alt="Imagen 4">
+<img src="Ella.jpg" id="image5" class="image" alt="Imagen 5">
+
+<div id="lyrics">
+    <p class="line" data-start="1" data-end="5">Amar puede doler, amar a veces puede doler</p>
+    <p class="line" data-start="6" data-end="10">Pero es lo único que sé</p>
+    <p class="line" data-start="11" data-end="15">Cuando se pone difícil, sabes que a veces puede volverse difícil</p>
+    <p class="line" data-start="16" data-end="20">Y la razón por la que despierto cada mañana</p>
+    <br>
+    <p class="line" data-start="21" data-end="25">Si pudieras escuchar con mis oídos</p>
+    <p class="line" data-start="26" data-end="30">Escucharías que tu voz es mi melodía</p>
+    <p class="line" data-start="31" data-end="35">Cada risa, cada susurro</p>
+    <p class="line" data-start="36" data-end="40">Es la música que le da ritmo a mi vida</p>
+    <br>
+    <p class="line" data-start="41" data-end="45">Si pudieras sentir con mi corazón</p>
+    <p class="line" data-start="46" data-end="50">Sentirías el amor incondicional</p>
+    <p class="line" data-start="51" data-end="55">Que crece y crece sin medida</p>
+    <p class="line" data-start="56" data-end="60">Con cada mirada</p>
+    <p class="line" data-start="61" data-end="65">Y cada gesto que compartimos juntos</p>
+</div>
 
 <script>
     const ingresarBtn = document.getElementById("ingresar-btn");
@@ -274,10 +275,9 @@
     const designerErrorMessage = document.getElementById("designer-error-message");
     const backgroundMusic = document.getElementById("background-music");
     const overlay = document.getElementById("overlay");
-    const image1 = document.getElementById("image1");
-    const image2 = document.getElementById("image2");
-    const image3 = document.getElementById("image3");
-    const image4 = document.getElementById("image4");
+    const images = document.querySelectorAll(".image");
+    const lyrics = document.getElementById("lyrics");
+    const backgroundVideo = document.getElementById("background-video");
 
     ingresarBtn.addEventListener("click", function() {
         ingresarBtn.style.display = "none";
@@ -308,47 +308,55 @@
                 document.getElementById("background-video").style.zIndex = 0;
                 document.getElementById("background-video").play();
                 backgroundMusic.play();
-                
-                overlay.style.display = "block";
-                overlay.style.animation = "fadeBlink 1.5s infinite";
+
+                backgroundVideo.style.animation = "fadeBlinkAndDarken 16s ease-in-out";
 
                 setTimeout(function() {
-                    overlay.style.animation = "";
-                    overlay.style.display = "none";
-                    image1.style.display = "block";
-                }, 18000); // 18 segundos
+                    overlay.style.display = "block";
+                    overlay.style.animation = "darkenToBlack 1s forwards";
+                    setTimeout(function() {
+                        overlay.style.backgroundColor = "rgba(0, 0, 0, 1)";
+                        images[0].style.display = "block";
+                        lyrics.style.display = "block";
+                        showLyrics();
+                    }, 1000);
+                }, 16000);
+
+                for (let i = 0; i < images.length; i++) {
+                    setTimeout(function() {
+                        if (i > 0) {
+                            images[i - 1].style.animation = "fadeOut 2s ease forwards";
+                            setTimeout(() => { images[i - 1].style.display = "none"; }, 2000);
+                        }
+                        images[i].style.display = "block";
+                    }, 17000 + (i * 10000));
+                }
 
                 setTimeout(function() {
-                    image1.style.animation = "fadeOut 2s ease forwards";
-                }, 26000); // 26 segundos
-
-                setTimeout(function() {
-                    image1.style.display = "none";
-                    image2.style.display = "block";
-                }, 28000); // 28 segundos
-
-                setTimeout(function() {
-                    image2.style.animation = "fadeOut 2s ease forwards";
-                }, 36000); // 36 segundos
-
-                setTimeout(function() {
-                    image2.style.display = "none";
-                    image3.style.display = "block";
-                }, 38000); // 38 segundos
-
-                setTimeout(function() {
-                    image3.style.animation = "fadeOut 2s ease forwards";
-                }, 46000); // 46 segundos
-
-                setTimeout(function() {
-                    image3.style.display = "none";
-                    image4.style.display = "block";
-                }, 48000); // 48 segundos
+                    images[images.length - 1].style.animation = "fadeOut 2s ease forwards";
+                    setTimeout(() => { images[images.length - 1].style.display = "none"; }, 2000);
+                }, 17000 + (images.length * 10000));
             } else {
                 designerErrorMessage.textContent = "Respuesta incorrecta, no puedes ingresar.";
             }
         });
     });
+
+    function showLyrics() {
+        const lines = document.querySelectorAll(".line");
+        lines.forEach((line, index) => {
+            const start = parseInt(line.getAttribute("data-start"), 10) * 1000;
+            const end = parseInt(line.getAttribute("data-end"), 10) * 1000;
+            setTimeout(() => {
+                line.style.opacity = "1";
+                line.style.animation = "lineFadeIn 2s forwards";
+            }, start);
+            setTimeout(() => {
+                line.style.opacity = "0";
+                line.style.animation = "lineFadeOut 2s forwards";
+            }, end);
+        });
+    }
 </script>
 
 </body>
