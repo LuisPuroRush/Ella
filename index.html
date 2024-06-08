@@ -113,6 +113,28 @@
         100% { background-color: rgba(0, 0, 0, 1); }
     }
 
+    @keyframes fadeIn {
+        0% { opacity: 0; }
+        100% { opacity: 1; }
+    }
+
+    @keyframes fadeOut {
+        0% { opacity: 1; }
+        100% { opacity: 0; }
+    }
+
+    @keyframes bounceIn {
+        0% { transform: scale(0.3); opacity: 0; }
+        50% { transform: scale(1.05); opacity: 1; }
+        70% { transform: scale(0.9); }
+        100% { transform: scale(1); }
+    }
+
+    @keyframes rotateIn {
+        0% { transform: rotate(-200deg); opacity: 0; }
+        100% { transform: rotate(0); opacity: 1; }
+    }
+
     #overlay {
         position: fixed;
         top: 0;
@@ -173,6 +195,17 @@
     .active {
         color: #fff;
     }
+
+    .welcome-message {
+        font-size: 36px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation: fadeIn 2s, fadeOut 2s 2s;
+        opacity: 0;
+        color: white;
+    }
 </style>
 </head>
 <body>
@@ -190,6 +223,13 @@
 <button id="ingresar-btn" class="btn">Ingresar</button>
 
 <div id="content-container">
+    <div id="name-container" class="hidden">
+        <p>Ingresa tu nombre para saber si estás permitido</p>
+        <input type="text" id="nombre">
+        <button id="name-submit-btn" class="btn">Enviar</button>
+        <p id="name-error-message" class="error"></p>
+    </div>
+
     <div id="question-container" class="hidden">
         <p>¿Cuál es nuestra fecha juntos?</p>
         <input type="text" id="fecha">
@@ -209,37 +249,33 @@
 <div id="overlay"></div>
 <img src="Ella.jpg" id="image1" class="image" alt="Imagen 1">
 <img src="Ella2.png" id="image2" class="image" alt="Imagen 2">
-<img src="Ella.jpg" id="image3" class="image" alt="Imagen 3">
-<img src="Ella2.png" id="image4" class="image" alt="Imagen 4">
+<img src="Ella3.jpg" id="image3" class="image" alt="Imagen 3">
+<img src="Ella4.jpg" id="image4" class="image" alt="Imagen 4">
 <img src="Ella.jpg" id="image5" class="image" alt="Imagen 5">
 
 <div class="lyrics-container" id="lyrics-container">
     <div class="lyrics" id="lyrics">
         <div class="line inactive">Amar puede doler, amar a veces puede doler</div>
         <div class="line active">Pero es lo único que sé</div>
-        <div class="line inactive">Cuando se pone difícil, sabes que a veces puede volverse difícil</div>
-        <div class="line inactive">Y la razón por la que despierto cada mañana</div>
-        <div class="line inactive">Es porque puedo ver tu cara en una fotografía</div>
-        <div class="line inactive">Es porque puedo recordar cómo me haces sentir</div>
-        <div class="line inactive">Cada risa, cada susurro</div>
-        <div class="line inactive">Es la música que le da ritmo a mi vida</div>
-        <div class="line inactive">Si pudieras escuchar con mis oídos</div>
-        <div class="line inactive">Sentirías el amor incondicional</div>
-        <div class="line inactive">Que crece y crece sin medida</div>
-        <div class="line inactive">Con cada mirada</div>
-        <div class="line inactive">Y cada gesto que compartimos juntos</div>
-        <div class="line inactive">Es porque puedo ver tu cara en una fotografía</div>
-        <div class="line inactive">Es porque puedo recordar cómo me haces sentir</div>
-        <div class="line inactive">Y puedo mantener este momento para siempre en mi mente</div>
-        <div class="line inactive">Y nunca tendré que dejarte ir</div>
+        <div class="line inactive">Cuando se vuelve difícil, sabes que a veces se vuelve difícil</div>
+        <div class="line inactive">Es lo único que nos hace sentir vivos</div>
+        <div class="line inactive">Mantenemos este amor en una fotografía</div>
+        <div class="line inactive">Hicimos estos recuerdos para nosotros</div>
+        <div class="line inactive">Donde nuestros ojos nunca se cierran</div>
+        <div class="line inactive">Nuestros corazones nunca están rotos</div>
+        <div class="line inactive">Y el tiempo está para siempre congelado</div>
     </div>
 </div>
+
+<div id="welcome-message" class="welcome-message hidden">Bienvenida Laura</div>
 
 <script>
     const ingresarBtn = document.getElementById("ingresar-btn");
     const contentContainer = document.getElementById("content-container");
+    const nameContainer = document.getElementById("name-container");
     const questionContainer = document.getElementById("question-container");
     const designerContainer = document.getElementById("designer-container");
+    const nameErrorMessage = document.getElementById("name-error-message");
     const errorMessage = document.getElementById("error-message");
     const designerErrorMessage = document.getElementById("designer-error-message");
     const backgroundMusic = document.getElementById("background-music");
@@ -248,11 +284,32 @@
     const lyricsContainer = document.getElementById("lyrics-container");
     const lyrics = document.getElementById("lyrics");
     const backgroundVideo = document.getElementById("background-video");
+    const welcomeMessage = document.getElementById("welcome-message");
 
     ingresarBtn.addEventListener("click", function() {
         ingresarBtn.style.display = "none";
         contentContainer.classList.add("fade-in");
-        questionContainer.classList.remove("hidden");
+        nameContainer.classList.remove("hidden");
+    });
+
+    document.getElementById("name-submit-btn").addEventListener("click", function() {
+        const nombre = document.getElementById("nombre").value.toLowerCase();
+
+        if (nombre === "laura" || nombre === "lucero") {
+            nameErrorMessage.textContent = "";
+            nameContainer.classList.add("hidden");
+            welcomeMessage.classList.remove("hidden");
+            welcomeMessage.style.opacity = "1";
+            setTimeout(() => {
+                welcomeMessage.style.opacity = "0";
+                setTimeout(() => {
+                    welcomeMessage.classList.add("hidden");
+                    questionContainer.classList.remove("hidden");
+                }, 1000); // Retraso para esperar que el mensaje desaparezca
+            }, 4000);
+        } else {
+            nameErrorMessage.textContent = "Nombre incorrecto.";
+        }
     });
 
     document.getElementById("submit-btn").addEventListener("click", function() {
@@ -315,7 +372,8 @@
     function showLyrics() {
         const lines = document.querySelectorAll(".line");
         let currentIndex = 0;
-        const lineHeight = 40; // Adjust based on font size and spacing
+        const lineHeight = 30; // Ajuste basado en el tamaño de fuente y espaciado
+        const displayDuration = 5000; // Ajustar tiempo según sea necesario
 
         function displayNextLine() {
             if (currentIndex > 2) {
@@ -326,7 +384,7 @@
                 lines[currentIndex].classList.add("active");
                 lyrics.style.top = `-${currentIndex * lineHeight}px`;
                 currentIndex++;
-                setTimeout(displayNextLine, 5000); // Adjust timing as needed
+                setTimeout(displayNextLine, displayDuration); // Ajustar tiempo según sea necesario
             }
         }
 
