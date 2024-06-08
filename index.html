@@ -212,12 +212,10 @@
 
 <video autoplay loop muted id="background-video">
   <source src="fondo.mp4" type="video/mp4">
-  Your browser does not support the video tag.
 </video>
 
 <audio id="background-music">
   <source src="musica.mp3" type="audio/mp3">
-  Your browser does not support the audio tag.
 </audio>
 
 <button id="ingresar-btn" class="btn">Ingresar</button>
@@ -237,6 +235,22 @@
         <p id="error-message" class="error"></p>
     </div>
 
+
+    
+    <div id="second-question-container" class="hidden">
+        <p>¿Cómo se llama tu estimado?</p>
+        <input type="text" id="estimado">
+        <button id="second-submit-btn" class="btn">Enviar</button>
+        <p id="second-question-error-message" class="error"></p>
+    </div>
+
+    <div id="esperancita-question-container" class="hidden">
+        <p>¿Eres mi esperancita? :3</p>
+        <button id="esperancita-si-btn" class="btn">Sí</button>
+        <button id="esperancita-no-btn" class="btn">No</button>
+        <p id="esperancita-error-message" class="error"></p>
+    </div>
+
     <div id="designer-container" class="hidden">
         <p>¿Quién diseñó esta web?</p>
         <button class="designer-option" data-designer="luis">Luis</button>
@@ -249,8 +263,8 @@
 <div id="overlay"></div>
 <img src="Ella.jpg" id="image1" class="image" alt="Imagen 1">
 <img src="Ella2.png" id="image2" class="image" alt="Imagen 2">
-<img src="Ella3.jpg" id="image3" class="image" alt="Imagen 3">
-<img src="Ella4.jpg" id="image4" class="image" alt="Imagen 4">
+<img src="Ella.jpg" id="image3" class="image" alt="Imagen 3">
+<img src="Ella2.png" id="image4" class="image" alt="Imagen 4">
 <img src="Ella.jpg" id="image5" class="image" alt="Imagen 5">
 
 <div class="lyrics-container" id="lyrics-container">
@@ -274,9 +288,13 @@
     const contentContainer = document.getElementById("content-container");
     const nameContainer = document.getElementById("name-container");
     const questionContainer = document.getElementById("question-container");
+    const secondQuestionContainer = document.getElementById("second-question-container");
+    const esperancitaQuestionContainer = document.getElementById("esperancita-question-container");
     const designerContainer = document.getElementById("designer-container");
     const nameErrorMessage = document.getElementById("name-error-message");
     const errorMessage = document.getElementById("error-message");
+    const secondQuestionErrorMessage = document.getElementById("second-question-error-message");
+    const esperancitaErrorMessage = document.getElementById("esperancita-error-message");
     const designerErrorMessage = document.getElementById("designer-error-message");
     const backgroundMusic = document.getElementById("background-music");
     const overlay = document.getElementById("overlay");
@@ -318,13 +336,34 @@
         if (fecha === "06") {
             errorMessage.textContent = "";
             questionContainer.classList.add("hidden");
-            designerContainer.classList.remove("hidden");
+            secondQuestionContainer.classList.remove("hidden");
         } else {
             errorMessage.textContent = "La fecha ingresada no es correcta.";
         }
     });
 
-    document.querySelectorAll(".designer-option").forEach(button => {
+    document.getElementById("second-submit-btn").addEventListener("click", function() {
+        const estimado = document.getElementById("estimado").value.toLowerCase();
+
+        if (estimado === "anderson" || estimado === "luis") {
+            secondQuestionErrorMessage.textContent = "";
+            secondQuestionContainer.classList.add("hidden");
+            esperancitaQuestionContainer.classList.remove("hidden");
+        } else {
+            secondQuestionErrorMessage.textContent = "Respuesta incorrecta, no puedes ingresar.";
+        }
+    });
+
+    document.getElementById("esperancita-si-btn").addEventListener("click", function() {
+        esperancitaQuestionContainer.classList.add("hidden");
+        designerContainer.classList.remove("hidden");
+    });
+
+    document.getElementById("esperancita-no-btn").addEventListener("click", function() {
+        esperancitaErrorMessage.textContent = "¿Cómo que no? 😕";
+    });
+
+    document.querySelectorAll("#designer-container .designer-option").forEach(button => {
         button.addEventListener("click", function() {
             const designer = this.getAttribute("data-designer");
 
